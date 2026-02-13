@@ -42,19 +42,27 @@ class TransfermarktGateway:
     def get_players(self, club_id, season_id, save_to_file=False):
         file_name = f"data/tm_players.csv"
         file_exists = os.path.exists(file_name)
-        try:
-            data = pd.read_csv(file_name)
-            data = data[data["club_id"] == club_id & data["season_id"] == season_id]
-        except FileNotFoundError:
-            print(f"File {file_name} not found. Fetching data from API.")
+        data = None
+        w = True
+        df = None
+        if file_exists:
+            df = pd.read_csv(file_name)
+            data = df[(df["club_id"] == club_id) & (df["season_id"] == season_id)]
+            w = False if not data.empty else True
+        if data is None or data.empty:
+            print(f"Data is empty. Fetching data from API.")
             data = self.fetch_players(club_id, season_id)
-            # data = pd.read_json(data['players'])
             data = pd.DataFrame(data['players'])
             data['club_id'] = club_id
             data['season_id'] = season_id
-            if save_to_file:
-                data.to_csv(file_name, mode='a', index=False, header=not file_exists)
-                print(f"Data saved to {file_name}")
+        if save_to_file and w:
+            # data.to_csv(file_name, mode='a', index=False, header=not file_exists)
+            if df is not None:
+                df_final = pd.concat([df, data], ignore_index=True, sort=False)
+            else:
+                df_final = data
+            df_final.to_csv(file_name, index=False)
+            print(f"Data saved to {file_name}")
         
         return data
 
