@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Builder</title>
+</head>
+<body>
+    <form action="{% url 'index' %}" method="get" class="jsCompetitionForm">
+        <label for="competitionOpt">Competitions</label>
+        <select name="competition" id="competitionOpt">
+            {% for ck, cv in competitions.items %}
+            <option value="{{ck}}"
+            {% if comp == ck %}selected{% endif %}>{{cv}}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" formaction="{% url 'ajax_clubs' %}"
+        name="action" value="getclubs">GetClubs</button>
+    </form>
+    <hr>
+    <div id="players">
+        <table>
+        </table>
+    </div>
+    <hr>
+    <div id="fantasyTeam">
+        <div>
+            <button type="button" class="jsResetAlinBtn">Clear</button>
+        </div>
+        <table>
+            <tbody id="alineation">
+            </tbody>
+        </table>
+    </div>
+    {% load static %}
+    <script src="{% static 'builder/script.js' %}"></script>
+    <script type="text/javascript">
+        var selectPlayer = null;
+        handleFetchClubsEv();
+    </script>
+</body>
+</html>
