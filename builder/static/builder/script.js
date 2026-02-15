@@ -12,8 +12,27 @@ function handleFetchClubsEv() {
         fetch(url)
             .then(response => response.text())
             .then(html => {
-                const nationsBoxEl = document.querySelector('#players');
-                nationsBoxEl.innerHTML = html;
+                const clubsBoxEl = document.querySelector('.jsClubsBox');
+                clubsBoxEl.style.display = 'block';
+                clubsBoxEl.innerHTML = html;
+            })
+    });
+}
+
+function handleFetchNationsEv() {
+    const competitionFormEl = document.querySelector('.jsCompetitionForm');
+    competitionFormEl.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const submitter = e.submitter;
+        const actionUrl = submitter.getAttribute("formaction") || this.action;
+        const formData = new FormData(this, submitter);
+        const url = actionUrl + "?" + new URLSearchParams(formData);
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                const clubsBoxEl = document.querySelector('.jsNationsBox');
+                clubsBoxEl.style.display = 'block';
+                clubsBoxEl.innerHTML = html;
             })
     });
 }

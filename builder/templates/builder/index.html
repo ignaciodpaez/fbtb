@@ -7,15 +7,20 @@
 </head>
 <body>
     <form action="{% url 'index' %}" method="get" class="jsCompetitionForm">
-        <label for="competitionOpt">Competitions</label>
-        <select name="competition" id="competitionOpt">
-            {% for ck, cv in competitions.items %}
-            <option value="{{ck}}"
-            {% if comp == ck %}selected{% endif %}>{{cv}}</option>
-            {% endfor %}
-        </select>
-        <button type="submit" formaction="{% url 'ajax_clubs' %}"
-        name="action" value="getclubs">GetClubs</button>
+        <fieldset>
+            <legend>Competitions</legend>
+            <label for="competitionOpt">Competitions</label>
+            <select name="competition" id="competitionOpt">
+                {% for ck, cv in competitions.items %}
+                <option value="{{ck}}"
+                {% if comp == ck %}selected{% endif %}>{{cv}}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" formaction="{% url 'ajax_clubs' %}"
+            name="action" value="getclubs">GetClubs</button>
+        </fieldset>
+        <div class="jsClubsBox" style="display: none;"></div>
+        <div class="jsNationsBox" style="display: none;"></div>
     </form>
     <hr>
     <div id="players">
@@ -37,6 +42,7 @@
     <script type="text/javascript">
         var selectPlayer = null;
         handleFetchClubsEv();
+        handleFetchNationsEv();
     </script>
 </body>
 </html>

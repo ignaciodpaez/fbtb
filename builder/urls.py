@@ -5,4 +5,5 @@ from . import views
 urlpatterns = [
     path("", views.build_alineation, name="index"),
     path("ajax/clubs", views.get_clubs_ajax, name="ajax_clubs"),
+    path("ajax/nations", views.get_nations_ajax, name="ajax_nations"),
 ]

@@ -1,0 +1,11 @@
+<fieldset>
+    <legend>Clubs</legend>
+    <label for="clubmapOpt">Clubs</label>
+    <select name="club" id="clubOpt">
+        {% for club in clubs.clubs %}
+        <option value="{{club.id}}">{{club.name}}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" formaction="{% url 'ajax_nations' %}"
+    name="action" value="getnations" class="jsGetNationsBtn">GetNations</button>
+</fieldset>

@@ -19,7 +19,7 @@ def build_alineation(request):
 
 
 def get_clubs_ajax(request):
-    template = loader.get_template('builder/index.html')
+    template = loader.get_template('builder/clubs_form.html')
     context = {}
     
     competition = request.GET.get('competition', 'GB1')
@@ -31,4 +31,20 @@ def get_clubs_ajax(request):
     tm = TransfermarktGateway()
     clubs = tm.get_competition_clubs(competition, 2007)
 
-    return HttpResponse(clubs)
+    context['clubs'] = clubs
+
+    return HttpResponse(template.render(context, request))
+
+
+def get_nations_ajax(request):
+    template = loader.get_template('builder/nations_form.html')
+    context = {}
+    
+    club = request.GET.get('club', 'GB1')
+    
+    tm = TransfermarktGateway()
+    nations = tm.get_nations(club)
+
+    context['nations'] = nations
+
+    return HttpResponse(template.render(context, request))

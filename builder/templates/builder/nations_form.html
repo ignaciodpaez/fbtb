@@ -1,0 +1,10 @@
+<fieldset>
+    <legend>Nations</legend>
+    {% for nation in nations %}
+    <label for="{{ nation }}">{{nation}}</label>
+    <input type="checkbox" name="nations" id="{{ nation }}" value="{{ nation }}">
+    {% endfor %}
+    <button type="submit" formaction=""
+    name="action" value="search" class="jsSearchBtn">Search</button>
+    <button type="reset">Reset</button>
+</fieldset>

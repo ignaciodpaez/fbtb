@@ -1,3 +1,4 @@
+import ast
 import concurrent.futures as cf
 import json
 import os
@@ -110,3 +111,16 @@ class TransfermarktGateway:
     
     def delete_players_file(self, club_id, season_id):
         pass
+
+    def get_nations(self, club_id):
+        file_name = f"data/tm_players.csv"
+        file_exists = os.path.exists(file_name)
+        if file_exists is False:
+            raise RuntimeError(f"{file_name} not exists")
+        df = pd.read_csv(file_name)
+        data = df[df["club_id"] == club_id]['nationality'].unique()
+        nations = set()
+        for i in data:
+            nations.update(ast.literal_eval(i))
+        
+        return nations
