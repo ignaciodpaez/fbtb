@@ -1,0 +1,18 @@
+<tbody>
+    {% for k, player in players.iterrows %}
+    <tr data-playerid="{{ player.id }}">
+        <td>{{ player.name }}</td>
+        <td>{{ player.position }}</td>
+        <td>{{ player.nationality }}</td>
+        <td>{{ player.height }}</td>
+        <td>{{ player.foot }}</td>
+        <td>{{ player.joinedOn }}</td>
+        <td class="jsAlinActs" style="display: none;">
+            <button type="button" class="jsRemoveBtn">Rem</button>
+            <button type="button" class="jsUpBtn">Up</button>
+            <button type="button" class="jsDownBtn">Dow</button>
+            <button type="button" class="jsSelectBtn">Sel</button>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>

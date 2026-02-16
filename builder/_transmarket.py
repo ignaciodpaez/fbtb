@@ -56,7 +56,7 @@ class TransfermarktGateway:
         )
         return f"data/{file_name}"
 
-    def get_players(self, club_id, season_id, save_to_file=False):
+    def get_players_cache(self, club_id, season_id, save_to_file=False):
         file_name = f"data/tm_players.csv"
         file_exists = os.path.exists(file_name)
         data = None
@@ -124,3 +124,14 @@ class TransfermarktGateway:
             nations.update(ast.literal_eval(i))
         
         return nations
+    
+    def get_players(self, club_id):
+        file_name = f"data/tm_players.csv"
+        file_exists = os.path.exists(file_name)
+        if file_exists is False:
+            raise RuntimeError(f"{file_name} not exists")
+        df = pd.read_csv(file_name)
+        data = df[df["club_id"] == club_id].drop_duplicates(subset=['id'])
+        data['nationality'].apply(lambda: ast.literal_eval)
+        
+        return data

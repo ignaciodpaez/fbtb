@@ -12,9 +12,16 @@ function handleFetchClubsEv() {
         fetch(url)
             .then(response => response.text())
             .then(html => {
-                const clubsBoxEl = document.querySelector('.jsClubsBox');
-                clubsBoxEl.style.display = 'block';
-                clubsBoxEl.innerHTML = html;
+                let boxEl = null;
+                if (submitter.value === "getclubs") {
+                    boxEl = document.querySelector('.jsClubsBox');
+                } else if (submitter.value === "getnations") {
+                    boxEl = document.querySelector('.jsNationsBox');
+                } else if (submitter.value === "getplayers") {
+                    boxEl = document.querySelector('.jsPlayersBox > table');
+                }
+                boxEl.style.display = 'block';
+                boxEl.innerHTML = html;
             })
     });
 }

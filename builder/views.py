@@ -40,11 +40,26 @@ def get_nations_ajax(request):
     template = loader.get_template('builder/nations_form.html')
     context = {}
     
-    club = request.GET.get('club', 'GB1')
+    club = request.GET.get('club', 31)
     
     tm = TransfermarktGateway()
-    nations = tm.get_nations(club)
+    nations = tm.get_nations(int(club))
 
     context['nations'] = nations
+
+    return HttpResponse(template.render(context, request))
+
+
+def get_players_ajax(request):
+    template = loader.get_template('builder/players.html')
+    context = {}
+    
+    club = request.GET.get('club', 31)
+    nations = request.GET.getlist('nations')
+    
+    tm = TransfermarktGateway()
+    players = tm.get_players(int(club))
+
+    context['players'] = players
 
     return HttpResponse(template.render(context, request))
