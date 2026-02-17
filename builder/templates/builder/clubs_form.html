@@ -2,8 +2,8 @@
     <legend>Clubs</legend>
     <label for="clubmapOpt">Clubs</label>
     <select name="club" id="clubOpt">
-        {% for club in clubs.clubs %}
-        <option value="{{club.id}}">{{club.name}}</option>
+        {% for k, club in clubs.iterrows %}
+        <option value="{{club.club_id}}">{{club.club_name}}</option>
         {% endfor %}
     </select>
     <button type="submit" formaction="{% url 'ajax_nations' %}"

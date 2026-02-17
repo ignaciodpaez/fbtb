@@ -83,11 +83,38 @@ class TransfermarktGateway:
         
         return data
 
-    def get_competition_clubs(self, competition_id, season_id=None, save_to_file=False):
-        data = self.fetch_competition_clubs(competition_id, season_id)
-        data = pd.DataFrame(data)
+    def get_competition_clubs(self, competition_id, season_id=None):
+        file_name = f"data/tm_clubs.csv"
+        file_exists = os.path.exists(file_name)
+        if file_exists is False:
+            raise RuntimeError(f"{file_name} not exists")
+        df = pd.read_csv(file_name)
+        df_clubs = df[(df['id'] == competition_id) & (df["seasonId"] == season_id)]
 
-        return data
+        return df_clubs
+    
+    def save_competition_clubs(self, competition_id, season_id=None):
+        file_name = f"data/tm_clubs.csv"
+        file_exists = os.path.exists(file_name)
+        if file_exists is False:
+            raise RuntimeError(f"{file_name} not exists")
+        try:
+            df = pd.read_csv(file_name)
+            df_clubs = df[(df['id'] == competition_id) & (df["seasonId"] == season_id)]
+        except pd.errors.EmptyDataError:
+            df = pd.DataFrame()
+            df_clubs = df
+        if df_clubs.empty:
+            print(f"Data is empty. Fetching data from API.")
+            data = self.fetch_competition_clubs(competition_id, season_id)
+            df_data = pd.DataFrame(data)
+            df_norm = pd.json_normalize(df_data['clubs']).add_prefix('club_')
+            df_clubs = pd.concat([df_data.drop('clubs', axis=1), df_norm], axis=1)
+            df_final = pd.concat([df, df_clubs], ignore_index=True, sort=False)
+            print(f"Data ({competition_id}, {season_id}) saved to {file_name}")
+            df_final.to_csv(file_name, index=False)
+
+        return df_clubs
     
     def get_players_async(self, club_id, seasons=None, save_to_file=False):
 
@@ -125,13 +152,19 @@ class TransfermarktGateway:
         
         return nations
     
-    def get_players(self, club_id):
+    def get_players(self, club_id, nations=[]):
         file_name = f"data/tm_players.csv"
         file_exists = os.path.exists(file_name)
         if file_exists is False:
             raise RuntimeError(f"{file_name} not exists")
         df = pd.read_csv(file_name)
         data = df[df["club_id"] == club_id].drop_duplicates(subset=['id'])
-        data['nationality'].apply(lambda: ast.literal_eval)
+        data['nationality'] = data['nationality'].apply(ast.literal_eval)
+        if not nations:
+            return data
+        exploded = data.explode('nationality')
+        mask = exploded['nationality'].isin(nations)
+        valids = exploded[mask].index.unique()
+        resultado = df.loc[valids]
         
-        return data
+        return resultado

@@ -58,7 +58,7 @@ def get_players_ajax(request):
     nations = request.GET.getlist('nations')
     
     tm = TransfermarktGateway()
-    players = tm.get_players(int(club))
+    players = tm.get_players(int(club), nations).sort_values(by='position')
 
     context['players'] = players
 
