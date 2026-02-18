@@ -23,13 +23,14 @@ def get_clubs_ajax(request):
     context = {}
     
     competition = request.GET.get('competition', 'GB1')
+    season = request.GET.get('season', 2000)
     competitions = {k: v for k, v in sorted(competition_map.items(), key=lambda item: item[1])}
 
     if competition not in competitions.keys():
         competition = 'GB1'
     
     tm = TransfermarktGateway()
-    clubs = tm.get_competition_clubs(competition, 2007)
+    clubs = tm.get_competition_clubs(competition, int(season))
 
     context['clubs'] = clubs
 

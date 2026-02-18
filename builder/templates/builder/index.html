@@ -16,6 +16,8 @@
                 {% if comp == ck %}selected{% endif %}>{{cv}}</option>
                 {% endfor %}
             </select>
+            <label for="seasonOpt">Season:</label>
+            <input type="range" id="seasonOpt" name="season" min="2000" max="2005" value="2000">
             <button type="submit" formaction="{% url 'ajax_clubs' %}"
             name="action" value="getclubs">GetClubs</button>
         </fieldset>

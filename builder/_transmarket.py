@@ -2,6 +2,7 @@ import ast
 import concurrent.futures as cf
 import json
 import os
+import time
 import urllib.parse
 
 import requests
@@ -56,32 +57,30 @@ class TransfermarktGateway:
         )
         return f"data/{file_name}"
 
-    def get_players_cache(self, club_id, season_id, save_to_file=False):
+    def save_players(self, club_id, season_id):
         file_name = f"data/tm_players.csv"
         file_exists = os.path.exists(file_name)
-        data = None
-        w = True
-        df = None
-        if file_exists:
+        if file_exists is False:
+            raise RuntimeError(f"{file_name} not exists")
+        try:
             df = pd.read_csv(file_name)
-            data = df[(df["club_id"] == club_id) & (df["season_id"] == season_id)]
-            w = False if not data.empty else True
-        if data is None or data.empty:
+            df_players = df[(df["club_id"] == club_id) & (df["season_id"] == season_id)]
+        except pd.errors.EmptyDataError:
+            df = pd.DataFrame()
+            df_players = df
+        if df_players.empty:
             print(f"Data is empty. Fetching data from API.")
             data = self.fetch_players(club_id, season_id)
-            data = pd.DataFrame(data['players'])
-            data['club_id'] = club_id
-            data['season_id'] = season_id
-        if save_to_file and w:
+            df_players = pd.DataFrame(data['players'])
+            df_players['club_id'] = club_id
+            df_players['season_id'] = season_id
             # data.to_csv(file_name, mode='a', index=False, header=not file_exists)
-            if df is not None:
-                df_final = pd.concat([df, data], ignore_index=True, sort=False)
-            else:
-                df_final = data
+            df_final = pd.concat([df, df_players], ignore_index=True, sort=False)
+            print(f"Data ({club_id}, {season_id}) saved to {file_name}")
             df_final.to_csv(file_name, index=False)
-            print(f"Data saved to {file_name}")
-        
-        return data
+
+        return df_players
+
 
     def get_competition_clubs(self, competition_id, season_id=None):
         file_name = f"data/tm_clubs.csv"
@@ -168,3 +167,17 @@ class TransfermarktGateway:
         resultado = df.loc[valids]
         
         return resultado
+
+
+def save_players(club_id, season_id):
+    gw = TransfermarktGateway()
+    for year in range(2000, 2005):
+        gw.save_players(27, year)
+        time.sleep(5)
+
+
+def save_competition_clubs(competition_id, season_id):
+    gw = TransfermarktGateway()
+    for year in range(2000, 2005):
+        gw.save_competition_clubs(competition_id, year)
+        time.sleep(5)
