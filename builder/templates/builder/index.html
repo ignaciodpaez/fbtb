@@ -23,6 +23,9 @@
         </fieldset>
         <div class="jsClubsBox" style="display: none;"></div>
         <div class="jsNationsBox" style="display: none;"></div>
+        <button type="submit" formaction="{% url 'ajax_players' %}" formmethod="post"
+        name="action" value="getplayers" class="jsSearchBtn">Search</button>
+        <button type="reset">Reset</button>
     </form>
     <hr>
     <div class="jsPlayersBox">

@@ -4,7 +4,4 @@
     <label for="{{ nation }}">{{nation}}</label>
     <input type="checkbox" name="nations" id="{{ nation }}" value="{{ nation }}">
     {% endfor %}
-    <button type="submit" formaction="{% url 'ajax_players' %}" formmethod="post"
-    name="action" value="getplayers" class="jsSearchBtn">Search</button>
-    <button type="reset">Reset</button>
 </fieldset>

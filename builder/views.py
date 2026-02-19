@@ -44,7 +44,7 @@ def get_nations_ajax(request):
     club = request.GET.get('club', 31)
     
     tm = TransfermarktGateway()
-    nations = tm.get_nations(int(club))
+    nations = sorted(tm.get_nations(int(club)))
 
     context['nations'] = nations
 

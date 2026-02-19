@@ -172,7 +172,7 @@ class TransfermarktGateway:
 def save_players(club_id, season_id):
     gw = TransfermarktGateway()
     for year in range(2000, 2005):
-        gw.save_players(27, year)
+        gw.save_players(club_id, year)
         time.sleep(5)
 
 
