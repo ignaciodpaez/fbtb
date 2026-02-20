@@ -181,3 +181,28 @@ def save_competition_clubs(competition_id, season_id):
     for year in range(2000, 2005):
         gw.save_competition_clubs(competition_id, year)
         time.sleep(5)
+
+
+def select_players(competition_id=None, season=(), club_id=None, nation=[]):
+    gw = TransfermarktGateway()
+    if competition_id:
+        df_competition = gw.get_competition_clubs(competition_id, 2000)
+        df_club = df_competition['club_id'].unique()
+        # df_res = pd.DataFrame()
+        df_player = pd.read_csv('data/tm_players.csv')
+        df_player['nationality'] = df_player['nationality'].apply(ast.literal_eval)
+        df_player = df_player[df_player['club_id'].isin(df_club)]
+        if nation:
+            exploded = df_player.explode('nationality')
+            mask = exploded['nationality'].isin(nation)
+            valids = exploded[mask].index.unique()
+            resultado = df_player.loc[valids].drop_duplicates(subset=['id'])
+            return resultado
+        if season:
+            s1 = min(season)
+            s2 = max(season)
+            df_player = df_player['season_id'].between(s1, s2)
+        return df_player
+    if club_id:
+        return gw.get_players(club_id, nation)
+     
