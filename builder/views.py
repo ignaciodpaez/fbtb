@@ -37,6 +37,19 @@ def get_clubs_ajax(request):
     return HttpResponse(template.render(context, request))
 
 
+def get_competition_nations_ajax(request):
+    template = loader.get_template('builder/nations_form.html')
+    context = {}
+    
+    competition = request.GET.get('competition', 'GB1')
+
+    nations = sorted(select_competition_nations(competition))
+
+    context['nations'] = nations
+
+    return HttpResponse(template.render(context, request))
+
+
 def get_nations_ajax(request):
     template = loader.get_template('builder/nations_form.html')
     context = {}
@@ -55,12 +68,15 @@ def get_players_ajax(request):
     template = loader.get_template('builder/players.html')
     context = {}
     
-    club = request.GET.get('club', 31)
+    club = request.GET.get('club')
     nations = request.GET.getlist('nations')
     
-    tm = TransfermarktGateway()
-    players = tm.get_players(int(club), nations).sort_values(by='position')
+    if club is None:
+        league = request.GET.get('competition')
+        players = select_competition_players(league, nation=nations)
+    else:
+        players = select_players(int(club), nation=nations)
 
-    context['players'] = players
+    context['players'] = players.sort_values(by='position')
 
     return HttpResponse(template.render(context, request))

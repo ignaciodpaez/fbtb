@@ -183,26 +183,51 @@ def save_competition_clubs(competition_id, season_id):
         time.sleep(5)
 
 
-def select_players(competition_id=None, season=(), club_id=None, nation=[]):
-    gw = TransfermarktGateway()
-    if competition_id:
-        df_competition = gw.get_competition_clubs(competition_id, 2000)
-        df_club = df_competition['club_id'].unique()
-        # df_res = pd.DataFrame()
-        df_player = pd.read_csv('data/tm_players.csv')
-        df_player['nationality'] = df_player['nationality'].apply(ast.literal_eval)
-        df_player = df_player[df_player['club_id'].isin(df_club)]
-        if nation:
-            exploded = df_player.explode('nationality')
-            mask = exploded['nationality'].isin(nation)
-            valids = exploded[mask].index.unique()
-            resultado = df_player.loc[valids].drop_duplicates(subset=['id'])
-            return resultado
-        if season:
-            s1 = min(season)
-            s2 = max(season)
-            df_player = df_player['season_id'].between(s1, s2)
-        return df_player
-    if club_id:
-        return gw.get_players(club_id, nation)
+def select_players(club_id, season=(), nation=[]):
+    df_player = pd.read_csv('data/tm_players.csv')
+    df_player['nationality'] = df_player['nationality'].apply(ast.literal_eval)
+    df_player = df_player.to_dict('records')
+
+    filtered_players = {
+        player['id']: player for player in df_player
+        if player['club_id'] == club_id and bool(set(player['nationality']) & set(nation))
+    }
+
+    return pd.DataFrame.from_dict(filtered_players, 'index')
+
+
+def select_competition_nations(competition_id):
+    df_player = pd.read_csv('data/tm_players.csv')
+    df_player['nationality'] = df_player['nationality'].apply(ast.literal_eval)
+    df_player = df_player.to_dict('records')
+    df_club = pd.read_csv('data/tm_clubs.csv').to_dict('records')
+
+    club_ids = {club['club_id'] for club in df_club if club['id'] == competition_id}
+
+    players = {
+        player['id']: player for player in df_player if player['club_id'] in club_ids
+    }
+
+    nations = set()
+    for player in players.values():
+        for nation in player['nationality']:
+            nations.add(nation)
+
+    return nations
+
+
+def select_competition_players(competition_id, season=(), nation=[]):
+    df_player = pd.read_csv('data/tm_players.csv')
+    df_player['nationality'] = df_player['nationality'].apply(ast.literal_eval)
+    df_player = df_player.to_dict('records')
+    df_club = pd.read_csv('data/tm_clubs.csv').to_dict('records')
+
+    club_ids = {club['club_id'] for club in df_club if club['id'] == competition_id}
+
+    filtered_players = {
+        player['id']: player for player in df_player
+        if player['club_id'] in club_ids and bool(set(player['nationality']) & set(nation))
+    }
+
+    return pd.DataFrame.from_dict(filtered_players, 'index')
      
