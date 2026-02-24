@@ -36,3 +36,18 @@ function handleToggleClubsBox() {
         }
     });
 }
+
+function handleAddPlayer() {
+    const btnEl = document.querySelector('.jsAddPlayerBtn');
+    btnEl.addEventListener('click', function (e) {
+        const selectors = '.jsPlayersBox input[type="checkbox"]:checked';
+        var checkedCheckboxes = document.querySelectorAll(selectors);
+        checkedCheckboxes.forEach(checkbox => {
+            const row = checkbox.closest('tr');
+            var clonedRow = row.cloneNode(true);
+            clonedRow.id = "newID_" + Math.random().toString(36).substr(2, 9);
+            var destinationTableBody = document.getElementById("alineation");
+            destinationTableBody.appendChild(clonedRow);
+        });
+    });
+}
