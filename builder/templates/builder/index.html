@@ -25,6 +25,7 @@
         </fieldset>
         <div class="jsClubsBox" style="display: none;"></div>
         <div class="jsNationsBox" style="display: none;"></div>
+        <br>
         <button type="submit" formaction="{% url 'ajax_players' %}" formmethod="post"
         name="action" value="getplayers" class="jsSearchBtn">Search</button>
         <button type="reset">Reset</button>
@@ -49,6 +50,7 @@
     <script type="text/javascript">
         var selectPlayer = null;
         handleFetchClubsEv();
+        handleToggleClubsBox()
     </script>
 </body>
 </html>

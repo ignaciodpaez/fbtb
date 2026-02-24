@@ -25,3 +25,14 @@ function handleFetchClubsEv() {
             })
     });
 }
+
+function handleToggleClubsBox() {
+    const boxEl = document.querySelector('.jsClubsBox');
+    boxEl.addEventListener('click', function (e) {
+        if (e.target && e.target.classList.contains('jsRemoveClubsBtn')) {
+            const btnEl = document.querySelector('.jsRemoveClubsBtn');
+            const fsEl = btnEl.closest('fieldset');
+            fsEl.disabled = true;
+        }
+    });
+}
