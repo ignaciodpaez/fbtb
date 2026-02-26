@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Builder</title>
+    {% include "builder/style.css.html" %}
 </head>
 <body>
     <form action="{% url 'index' %}" method="get" class="jsCompetitionForm">
         <fieldset>
             <legend>Competitions</legend>
-            <label for="competitionOpt">Competitions</label>
+            <label for="competitionOpt">Competitions:</label>
             <select name="competition" id="competitionOpt">
-                {% for ck, cv in competitions.items %}
-                <option value="{{ck}}"
-                {% if comp == ck %}selected{% endif %}>{{cv}}</option>
+                {% for cpk, cpv in competitions.items %}
+                <option value="{{cpk}}">{{cpv}}</option>
                 {% endfor %}
             </select>
             <label for="seasonOpt">Season:</label>
@@ -35,7 +35,7 @@
         <table>
         </table>
     </div>
-    <hr>
+    <hr><br>
     <div id="fantasyTeam">
         <div>
             <button type="button" class="jsResetAlinBtn">Clear</button>
