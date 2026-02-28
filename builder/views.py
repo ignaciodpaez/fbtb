@@ -69,13 +69,20 @@ def get_players_ajax(request):
     context = {}
     
     club = request.GET.get('club')
+    season_start = request.GET.get('ss', None)
+    season_end = request.GET.get('se', None)
     nations = request.GET.getlist('nations')
     
     if club is None:
         league = request.GET.get('competition')
         players = select_competition_players(league, nation=nations)
     else:
-        players = select_players(int(club), nation=nations)
+        players = select_players(
+            int(club), 
+            int(season_start) if season_start else None, 
+            int(season_end)if season_end else None, 
+            nation=nations
+        )
 
     context['players'] = players.sort_values(by='position')
 

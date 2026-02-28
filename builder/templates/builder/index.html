@@ -18,6 +18,8 @@
             </select>
             <label for="seasonOpt">Season:</label>
             <input type="range" id="seasonOpt" name="season" min="2000" max="2005" value="2000">
+            <input type="number" name="ss" placeholder="2000">
+            <input type="number" name="se" placeholder="2009">
             <button type="submit" formaction="{% url 'ajax_clubs' %}"
             name="action" value="getclubs">GetClubs</button>
             <button type="submit" formaction="{% url 'ajax_comp_nations' %}"

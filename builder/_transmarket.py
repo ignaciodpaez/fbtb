@@ -169,31 +169,45 @@ class TransfermarktGateway:
         return resultado
 
 
-def save_players(club_id, season_id):
+def save_players(club_id, season_start, season_end=None):
     gw = TransfermarktGateway()
-    for year in range(2000, 2005):
+    end = season_start if season_end is None else season_end
+    years = range(season_start, end + 1)
+    for year in years:
         gw.save_players(club_id, year)
         time.sleep(5)
 
 
-def save_competition_clubs(competition_id, season_id):
+def save_competition_clubs(competition_id, season_start, season_end=None):
     gw = TransfermarktGateway()
-    for year in range(2000, 2005):
+    end = season_start if season_end is None else season_end
+    years = range(season_start, end + 1)
+    for year in years:
         gw.save_competition_clubs(competition_id, year)
         time.sleep(5)
 
 
-def select_players(club_id, season=(), nation=[]):
+def select_players(club_id, season_start=None, season_end=None, nation=[]):
     df_player = pd.read_csv('data/tm_players.csv')
     df_player['nationality'] = df_player['nationality'].apply(ast.literal_eval)
-    df_player = df_player.to_dict('records')
 
-    filtered_players = {
-        player['id']: player for player in df_player
-        if player['club_id'] == club_id and bool(set(player['nationality']) & set(nation))
-    }
+    df_club = pd.read_csv('data/tm_clubs.csv')
 
-    return pd.DataFrame.from_dict(filtered_players, 'index')
+    df_player = pd.merge(df_player, df_club, on='club_id', how='left', suffixes=("", "_y"))
+
+    mask = (df_player['club_id'] == club_id)
+    mask &= df_player['nationality'].apply(lambda x: bool(set(x) & set(nation)))
+    
+    if season_start and season_end is None:
+        mask &= df_player['season_id'] >= season_start
+    
+    if season_start and season_end:
+        mask &= df_player['season_id'].between(season_start, season_end)
+    
+    if season_start is None and season_end:
+        mask &= df_player['season_id'] <= season_end
+
+    return df_player[mask].drop_duplicates(subset=['id']).reset_index(drop=True)
 
 
 def select_competition_nations(competition_id):
@@ -216,18 +230,23 @@ def select_competition_nations(competition_id):
     return nations
 
 
-def select_competition_players(competition_id, season=(), nation=[]):
+def select_competition_players(competition_id, season_start=None, season_end=None, nation=[]):
     df_player = pd.read_csv('data/tm_players.csv')
     df_player['nationality'] = df_player['nationality'].apply(ast.literal_eval)
-    df_player = df_player.to_dict('records')
-    df_club = pd.read_csv('data/tm_clubs.csv').to_dict('records')
 
-    club_ids = {club['club_id'] for club in df_club if club['id'] == competition_id}
+    df_club = pd.read_csv('data/tm_clubs.csv')
+    df_club = df_club[df_club['id'] == competition_id]
 
-    filtered_players = {
-        player['id']: player for player in df_player
-        if player['club_id'] in club_ids and bool(set(player['nationality']) & set(nation))
-    }
+    df_player = pd.merge(df_player, df_club, on='club_id', how='inner', suffixes=("", "_y"))
+    mask = df_player['nationality'].apply(lambda x: bool(set(x) & set(nation)))
+    
+    if season_start and season_end is None:
+        mask &= df_player['season_id'] >= season_start
+    
+    if season_start and season_end:
+        mask &= df_player['season_id'].between(season_start, season_end)
+    
+    if season_start is None and season_end:
+        mask &= df_player['season_id'] <= season_end
 
-    return pd.DataFrame.from_dict(filtered_players, 'index')
-     
+    return df_player[mask].drop_duplicates(subset=['id']).reset_index(drop=True)
