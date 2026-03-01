@@ -2,6 +2,7 @@ import ast
 import concurrent.futures as cf
 import json
 import os
+import sqlite3
 import time
 import urllib.parse
 
@@ -250,3 +251,27 @@ def select_competition_players(competition_id, season_start=None, season_end=Non
         mask &= df_player['season_id'] <= season_end
 
     return df_player[mask].drop_duplicates(subset=['id']).reset_index(drop=True)
+
+
+def read_sql_query(df, table=None, stmt=None):
+    # type: (pd.DataFrame, str, str) -> None
+
+    conn = sqlite3.connect(':memory:')
+
+    try:
+        df.to_sql(table, conn, index=False, if_exists='replace')
+        query = stmt
+        df_query = pd.read_sql_query(query, conn)
+    
+        return df_query
+    finally:
+        conn.close()
+
+
+def get_int_param(value, alt=None):
+    try:
+        value = int(value)
+    except ValueError:
+        value = alt
+    
+    return value
