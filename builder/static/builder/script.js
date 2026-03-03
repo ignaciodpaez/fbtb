@@ -1,4 +1,9 @@
 
+let fbCtx = {
+    playersHtml: [],
+    playersHtmlIndex: 0,
+}
+
 function handleFetchClubsEv() {
     const competitionFormEl = document.querySelector('.jsCompetitionForm');
     competitionFormEl.addEventListener('submit', function (e) {
@@ -19,6 +24,7 @@ function handleFetchClubsEv() {
                     boxEl = document.querySelector('.jsNationsBox');
                 } else if (submitter.value === "getplayers") {
                     boxEl = document.querySelector('.jsPlayersBox > table');
+                    fbCtx.playersHtml.push(html);
                 }
                 boxEl.style.display = 'block';
                 boxEl.innerHTML = html;
@@ -49,5 +55,33 @@ function handleAddPlayer() {
             var destinationTableBody = document.getElementById("alineation");
             destinationTableBody.appendChild(clonedRow);
         });
+    });
+}
+
+function handlePrevPlayersTable() {
+    const btnEl = document.querySelector('.jsPrevBtn');
+    btnEl.addEventListener('click', function (e) {
+        const boxEl = document.querySelector('.jsPlayersBox > table');
+        fbCtx.playersHtmlIndex -= 1;
+        const i = fbCtx.playersHtmlIndex;
+        const n = fbCtx.playersHtml.length;
+        boxEl.innerHTML = fbCtx.playersHtml.at((i % n + n) % n);
+    });
+
+    const nextBtnEl = document.querySelector('.jsNextBtn');
+    nextBtnEl.addEventListener('click', function (e) {
+        const boxEl = document.querySelector('.jsPlayersBox > table');
+        fbCtx.playersHtmlIndex += 1;
+        const i = fbCtx.playersHtmlIndex;
+        const n = fbCtx.playersHtml.length;
+        boxEl.innerHTML = fbCtx.playersHtml.at((i % n + n) % n);
+    });
+}
+
+function handleClearPlayers() {
+    const btnEl = document.querySelector('.jsResetAlinBtn');
+    btnEl.addEventListener('click', function (e) {
+        const tbodyRef = document.getElementById("alineation");
+        tbodyRef.innerHTML = "";
     });
 }
