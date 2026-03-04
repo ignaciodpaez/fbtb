@@ -1,5 +1,51 @@
 <style>
-    #alineation {
-        background-color: lightgreen;
+
+    *, *::before, *::after {
+        box-sizing: border-box;
     }
+
+    html {
+        height: 100%;
+        font-family: Arial, sans-serif;
+        font-size: 100%;
+        background-color: #f4f4f4;
+        color: #333;
+    }
+
+    body {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        padding: 0;
+    }
+
+    main {
+        margin: 0;
+        padding: 16px;
+    }
+
+    .fb-player-box {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .fb-player-box-item {
+        flex: 1;
+    }
+
+    .fb-player-box-item-none {
+        display: none;
+    }
+
+    .fb-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .fb-table-squad {
+        background-color: mediumseagreen;
+    }
+
+
 </style>

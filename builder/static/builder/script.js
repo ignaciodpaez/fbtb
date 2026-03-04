@@ -61,6 +61,9 @@ function handleAddPlayer() {
 function handlePrevPlayersTable() {
     const btnEl = document.querySelector('.jsPrevBtn');
     btnEl.addEventListener('click', function (e) {
+        if (fbCtx.playersHtml.length === 0) {
+            return;
+        }
         const boxEl = document.querySelector('.jsPlayersBox > table');
         fbCtx.playersHtmlIndex -= 1;
         const i = fbCtx.playersHtmlIndex;
@@ -70,6 +73,9 @@ function handlePrevPlayersTable() {
 
     const nextBtnEl = document.querySelector('.jsNextBtn');
     nextBtnEl.addEventListener('click', function (e) {
+        if (fbCtx.playersHtml.length === 0) {
+            return;
+        }
         const boxEl = document.querySelector('.jsPlayersBox > table');
         fbCtx.playersHtmlIndex += 1;
         const i = fbCtx.playersHtmlIndex;
