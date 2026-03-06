@@ -4,16 +4,16 @@
         <td>{{ player.name }}</td>
         <td>{{ player.position }}</td>
         <td>{{ player.nationality }}</td>
+        <td>{{ player.age}}</td>
         <td>{{ player.height }}</td>
         <td>{{ player.foot }}</td>
         <td>{{ player.joinedOn }}</td>
         <td>{{ player.club_name }}</td>
         <td><input type="checkbox" id="{{ player.id }}" name="playerRow" value="{{ player.id }}"></td>
-        <td class="jsAlinActs" style="display: none;">
-            <button type="button" class="jsRemoveBtn">Rem</button>
-            <button type="button" class="jsUpBtn">Up</button>
-            <button type="button" class="jsDownBtn">Dow</button>
-            <button type="button" class="jsSelectBtn">Sel</button>
+        <td class="fb-js-player-btn-group" style="display: none;">
+            <button type="button" class="fb-squad js-remove-btn">Rem</button>
+            <button type="button" class="fb-squad js-up-btn">Up</button>
+            <button type="button" class="fb-squad js-down-btn">Dow</button>
         </td>
     </tr>
     {% endfor %}

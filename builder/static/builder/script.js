@@ -54,6 +54,9 @@ function handleAddPlayer() {
             clonedRow.id = "newID_" + Math.random().toString(36).substr(2, 9);
             var destinationTableBody = document.getElementById("alineation");
             destinationTableBody.appendChild(clonedRow);
+            checkbox.checked = false;
+            clonedRow.querySelector('input[type="checkbox"]').checked = false;
+            clonedRow.querySelector('.fb-js-player-btn-group').style.display = 'block';
         });
     });
 }
@@ -81,6 +84,14 @@ function handlePrevPlayersTable() {
         const i = fbCtx.playersHtmlIndex;
         const n = fbCtx.playersHtml.length;
         boxEl.innerHTML = fbCtx.playersHtml.at((i % n + n) % n);
+    });
+}
+
+function handleClearPlayers() {
+    const btnEl = document.querySelector('.jsResetAlinBtn');
+    btnEl.addEventListener('click', function (e) {
+        const tbodyRef = document.getElementById("alineation");
+        tbodyRef.innerHTML = "";
     });
 }
 

@@ -87,6 +87,8 @@ def get_players_ajax(request):
             nation=nations
         )
 
+    players['age'] = pd.to_numeric(players['age'], downcast='integer')
+
     context['players'] = players.sort_values(by='position')
 
     return HttpResponse(template.render(context, request))
