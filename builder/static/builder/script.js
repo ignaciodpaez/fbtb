@@ -102,3 +102,49 @@ function handleClearPlayers() {
         tbodyRef.innerHTML = "";
     });
 }
+
+function handlePlayerBtn() {
+    const squadEl = document.getElementById('alineation');
+    squadEl.addEventListener('click', function (e) {
+        const row = e.target.closest('tr');
+        
+        if (e.target.classList.contains('js-up-btn')) {
+            const prev = row.previousElementSibling;
+            if (prev) row.parentNode.insertBefore(row, prev);
+        } 
+    
+        else if (e.target.classList.contains('js-down-btn')) {
+            const next = row.nextElementSibling;
+            if (next) row.parentNode.insertBefore(next, row);
+        } 
+        
+        else if (e.target.classList.contains('js-remove-btn')) {
+            row.remove();
+        }
+    });
+}
+
+function handleSwapPlayers() {
+    const btnEl = document.querySelector('.js-swap-btn');
+    btnEl.addEventListener('click', function (e) {
+        const checkedBoxes = document.querySelectorAll('#alineation input[type="checkbox"]:checked');
+
+        if (checkedBoxes.length !== 2) {
+            return;
+        }
+
+        const row1 = checkedBoxes[0].closest('tr');
+        const row2 = checkedBoxes[1].closest('tr');
+
+        const tempMarker = document.createElement('div');
+        row1.parentNode.insertBefore(tempMarker, row1);
+
+        row2.parentNode.insertBefore(row1, row2);
+
+        tempMarker.parentNode.insertBefore(row2, tempMarker);
+
+        tempMarker.remove();
+        checkedBoxes[0].checked = false;
+        checkedBoxes[1].checked = false;
+    });
+}

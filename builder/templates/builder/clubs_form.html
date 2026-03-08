@@ -1,6 +1,6 @@
-<fieldset>
+<fieldset class="fb-fieldset">
     <legend>Clubs</legend>
-    <label for="clubmapOpt">Clubs</label>
+    <label for="clubOpt">Clubs</label>
     <select name="club" id="clubOpt">
         {% for k, club in clubs.iterrows %}
         <option value="{{club.club_id}}">{{club.club_name}}</option>

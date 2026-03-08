@@ -9,7 +9,7 @@
 <body>
     <main>
         <form action="{% url 'index' %}" method="get" class="jsCompetitionForm">
-            <fieldset>
+            <fieldset class="fb-fieldset">
                 <legend>Competitions</legend>
                 <label for="competitionOpt">League:</label>
                 <select name="competition" id="competitionOpt">
@@ -26,18 +26,14 @@
                 <button type="submit" formaction="{% url 'ajax_comp_nations' %}"
                 name="action" value="getnations" class="jsGetNationsBtn">GetNations</button>
             </fieldset>
-            <details>
+            <div class="jsClubsBox" style="display: none;"></div>
+            <div class="jsNationsBox" style="display: none;"></div>
+            <details class="fb-details">
                 <summary>Sql query</summary>
-                <fieldset>
-                    <legend>Query</legend>
                     <label for="sql_query">Enter your SQL query:</label><br>
                     <textarea id="sql_query" name="sql" rows="10" cols="50" 
                         placeholder="SELECT * FROM tm_players WHERE club_id = 46;"></textarea>
-                    <br>
-                </fieldset>
             </details>
-            <div class="jsClubsBox" style="display: none;"></div>
-            <div class="jsNationsBox" style="display: none;"></div>
             <br>
             <button type="submit" formaction="{% url 'ajax_players' %}" formmethod="post"
             name="action" value="getplayers" class="jsSearchBtn">Search</button>
@@ -56,6 +52,7 @@
                 <div>
                     <button type="button" class="jsResetAlinBtn">Clear</button>
                     <button type="button" class="jsAddPlayerBtn">Add</button>
+                    <button type="button" class="js-swap-btn">Swap</button>
                 </div>
                 <table class="fb-table fb-table-squad">
                     <tbody id="alineation">
@@ -73,6 +70,8 @@
         handleAddPlayer();
         handlePrevPlayersTable();
         handleClearPlayers();
+        handlePlayerBtn();
+        handleSwapPlayers();
     </script>
 </body>
 </html>

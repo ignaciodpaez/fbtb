@@ -88,6 +88,7 @@ def get_players_ajax(request):
         )
 
     players['age'] = pd.to_numeric(players['age'], downcast='integer')
+    players['height'] = pd.to_numeric(players['height'], downcast='integer')
 
     context['players'] = players.sort_values(by='position')
 
