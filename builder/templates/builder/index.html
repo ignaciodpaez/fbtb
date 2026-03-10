@@ -10,7 +10,7 @@
     <main>
         <form action="{% url 'index' %}" method="get" class="jsCompetitionForm">
             <fieldset class="fb-fieldset">
-                <legend>Competitions</legend>
+                <legend><strong># Competitions</strong></legend>
                 <label for="competitionOpt">League:</label>
                 <select name="competition" id="competitionOpt">
                     {% for cpk, cpv in competitions.items %}

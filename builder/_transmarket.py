@@ -197,7 +197,8 @@ def select_players(club_id, season_start=None, season_end=None, nation=[]):
     df_player = pd.merge(df_player, df_club, on='club_id', how='left', suffixes=("", "_y"))
 
     mask = (df_player['club_id'] == club_id)
-    mask &= df_player['nationality'].apply(lambda x: bool(set(x) & set(nation)))
+    if nation:
+        mask &= df_player['nationality'].apply(lambda x: bool(set(x) & set(nation)))
     
     if season_start and season_end is None:
         mask &= df_player['season_id'] >= season_start
