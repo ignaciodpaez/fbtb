@@ -49,6 +49,16 @@ function handleAddPlayer() {
         const selectors = '.jsPlayersBox input[type="checkbox"]:checked';
         var checkedCheckboxes = document.querySelectorAll(selectors);
         checkedCheckboxes.forEach(checkbox => {
+            const rows = document.querySelectorAll('#alineation tr');
+            const rowsLen = rows.length;
+            const emptyRows = document.querySelectorAll('#alineation tr.fb-js-empty');
+            if (rowsLen >= 11 && emptyRows.length === 0) {
+                const targetRow = rows[10];
+                const emptyRow = document.createElement('tr');
+                emptyRow.innerHTML = '<td colspan="10">&nbsp;</td>';
+                targetRow.parentNode.insertBefore(emptyRow, targetRow.nextSibling);
+                emptyRow.classList.add('fb-js-empty', 'fb-table-squad', 'fb-row-empty');
+            }
             const row = checkbox.closest('tr');
             var clonedRow = row.cloneNode(true);
             clonedRow.id = "newID_" + Math.random().toString(36).substr(2, 9);
@@ -106,6 +116,12 @@ function handleClearPlayers() {
 function handlePlayerBtn() {
     const squadEl = document.getElementById('alineation');
     squadEl.addEventListener('click', function (e) {
+
+        const emptyRow = squadEl.querySelector('tr.fb-js-empty');
+        if (emptyRow) {
+            emptyRow.remove();
+        }
+        
         const row = e.target.closest('tr');
         
         if (e.target.classList.contains('js-up-btn')) {
@@ -120,6 +136,16 @@ function handlePlayerBtn() {
         
         else if (e.target.classList.contains('js-remove-btn')) {
             row.remove();
+        }
+
+        const rows = squadEl.querySelectorAll('tr');
+        const emptyRowAfter = squadEl.querySelector('tr.fb-js-empty');
+        if (rows.length > 11 && !emptyRowAfter) {
+            const targetRow = rows[10];
+            const emptyRow = document.createElement('tr');
+            emptyRow.innerHTML = '<td colspan="10">&nbsp;</td>';
+            targetRow.parentNode.insertBefore(emptyRow, targetRow.nextSibling);
+            emptyRow.classList.add('fb-js-empty', 'fb-table-squad', 'fb-row-empty');
         }
     });
 }

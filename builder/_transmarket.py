@@ -20,6 +20,7 @@ competition_map = {
     "NL1": "Eredivisie",
     "BRA1": "Campeonato Brasileiro Série A",
     "ARG1": "Primera División Argentina",
+    'BE1': "Jupiler Pro League"
     # "CL": "Champions League",
     # "EL": "Europa League",
 }
