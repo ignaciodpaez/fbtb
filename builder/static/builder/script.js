@@ -174,3 +174,47 @@ function handleSwapPlayers() {
         checkedBoxes[1].checked = false;
     });
 }
+
+function handleSaveSquad() {
+    const formEl = document.querySelector('.fb-js-save-squad');
+    formEl.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const squadName = prompt("Enter squad name:");
+        if (!squadName) {
+            return;
+        }
+        const rows = document.querySelectorAll('#alineation tr');
+        const players = [];
+        rows.forEach(row => {
+            const playerId = row.getAttribute('data-playerid');
+            const clubId = row.getAttribute('data-clubid');
+            const seasonId = row.getAttribute('data-seasonid');
+            if (playerId && clubId && seasonId) {
+                players.push({
+                    id: playerId,
+                    club_id: clubId,
+                    season_id: seasonId,
+                });
+            }
+        });
+
+        fetch(formEl.getAttribute('action'), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: squadName,
+                players: players,
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.status);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while saving the squad.');
+        });
+    });
+}

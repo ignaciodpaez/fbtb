@@ -1,6 +1,6 @@
 <tbody>
     {% for k, player in players.iterrows %}
-    <tr data-playerid="{{ player.id }}">
+    <tr data-playerid="{{ player.id }}" data-clubid="{{ player.club_id }}" data-seasonid="{{ player.season_id }}">
         <td>{{ player.name }}</td>
         <td>{{ player.position }}</td>
         <td>{{ player.nationality }}</td>

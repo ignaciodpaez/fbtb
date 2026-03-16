@@ -48,16 +48,30 @@
                 </table>
             </div>
             <hr class="fb-player-box-item-none"><br class="fb-player-box-item-none">
-            <div class="fb-player-box-item" id="fantasyTeam">
-                <div>
-                    <button type="button" class="jsResetAlinBtn">Clear</button>
-                    <button type="button" class="jsAddPlayerBtn">Add</button>
-                    <button type="button" class="js-swap-btn">Swap</button>
+            <div class="fb-player-box-item">
+                <div class="fb-box" id="fantasyTeam">
+                    <div>
+                        <button type="button" class="jsResetAlinBtn">Clear</button>
+                        <button type="button" class="jsAddPlayerBtn">Add</button>
+                        <button type="button" class="js-swap-btn">Swap</button>
+                    </div>
+                    <table class="fb-table fb-table-squad">
+                        <tbody id="alineation">
+                        </tbody>
+                    </table>
                 </div>
-                <table class="fb-table fb-table-squad">
-                    <tbody id="alineation">
-                    </tbody>
-                </table>
+                <form class="fb-js-save-squad" action="{% url 'ajax_save_squad' %}" method="post" enctype='application/json'>
+                    {% csrf_token %}
+                    <!-- <input type="text" name="fb_squad_name" id="fbSquadNameTxt" placeholder="Squad Name">
+                    <input type="hidden" name="fb_squad_row" id="fbSquadRowTxt" value="">
+                    <input name='squad[0][id]' value='100'>
+                    <input name='squad[0][club_id]' value='100'>
+                    <input name='squad[0][season_id]' value='2000'>
+                    <input name='squad[1][id]' value='101'>
+                    <input name='squad[1][club_id]' value='100'>
+                    <input name='squad[1][season_id]' value='2000'> -->
+                    <button type="submit">Save Squad</button>
+                </form>
             </div>
         </div>
     </main>
@@ -72,6 +86,7 @@
         handleClearPlayers();
         handlePlayerBtn();
         handleSwapPlayers();
+        handleSaveSquad();
     </script>
 </body>
 </html>

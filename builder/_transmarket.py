@@ -189,6 +189,33 @@ def save_competition_clubs(competition_id, season_start, season_end=None):
         time.sleep(5)
 
 
+def save_user_squad(name, squad):
+    # type: (str, list) -> pd.DataFrame
+    
+    file_name = 'data/fb_user_squad.csv'
+    
+    if os.path.exists(file_name) is False:
+        raise RuntimeError(f"{file_name} not exists")
+
+    df_players = pd.read_csv('data/tm_players.csv')
+    df_squad = pd.read_csv(file_name)
+    df_temp = pd.DataFrame()
+    
+    for player in squad:
+        q = df_players['id'] == int(player['id'])
+        q &= df_players['club_id'] == int(player['club_id'])
+        q &= df_players['season_id'] == int(player['season_id'])
+        df_temp = pd.concat([df_temp, df_players[q]], ignore_index=True, sort=False)
+
+    df_temp['squad_name'] = name
+    df_temp['timestamp'] = int(time.time())
+    
+    df_final = pd.concat([df_squad, df_temp], ignore_index=True, sort=False)
+    df_final.to_csv(file_name, index=False)
+
+    return df_final
+
+
 def select_players(club_id, season_start=None, season_end=None, nation=[]):
     df_player = pd.read_csv('data/tm_players.csv')
     df_player['nationality'] = df_player['nationality'].apply(ast.literal_eval)
@@ -256,7 +283,7 @@ def select_competition_players(competition_id, season_start=None, season_end=Non
 
 
 def read_sql_query(df, table=None, stmt=None):
-    # type: (pd.DataFrame, str, str) -> None
+    # type: (pd.DataFrame, str, str) -> pd.DataFrame
 
     conn = sqlite3.connect(':memory:')
 

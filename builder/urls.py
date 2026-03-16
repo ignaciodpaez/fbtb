@@ -8,4 +8,5 @@ urlpatterns = [
     path("ajax/comp/nations", views.get_competition_nations_ajax, name="ajax_comp_nations"),
     path("ajax/nations", views.get_nations_ajax, name="ajax_nations"),
     path("ajax/players", views.get_players_ajax, name="ajax_players"),
+    path("ajax/squad/save", views.save_squad_ajax, name="ajax_save_squad"),
 ]

@@ -1,6 +1,8 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.template import loader
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 from ._transmarket import *
 
@@ -93,3 +95,16 @@ def get_players_ajax(request):
     context['players'] = players.sort_values(by='position')
 
     return HttpResponse(template.render(context, request))
+
+
+@csrf_exempt
+def save_squad_ajax(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            save_user_squad(data['name'], data['players'])
+            return JsonResponse({'status': 'success'})
+        except json.JSONDecodeError:
+            return HttpResponseBadRequest("Invalid JSON")
+    
+    return HttpResponseBadRequest("Only POST allowed")
