@@ -1,0 +1,16 @@
+<tbody>
+    {% for k, squad in squad_list.iterrows %}
+    <tr data-timestamp="{{ squad.timestamp }}" data-name="{{ squad.squad_name }}">
+        <td>{{ squad.squad_name }}</td>
+        <td>{{ squad.timestamp }}</td>
+        <td>{{ squad.size }}</td>
+        <td>
+            <form  class="fb-show-squad-form" action="{% url 'ajax_show_squad' %}" method="get">
+                <input type="hidden" name="squad_name" value="{{ squad.squad_name }}">
+                <input type="hidden" name="timestamp" value="{{ squad.timestamp }}">
+                <button type="submit" class="js-show-squad-btn">Show</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>

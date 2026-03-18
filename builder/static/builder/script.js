@@ -218,3 +218,46 @@ function handleSaveSquad() {
         });
     });
 }
+
+function handleFindSquad() {
+    const formEl = document.querySelector('.fb-js-find-squad');
+    formEl.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const squadName = formEl.querySelector('input[name="squad_name"]').value;
+        if (!squadName) {
+            return;
+        }
+        const url = formEl.getAttribute('action') + "?" + new URLSearchParams({ squad_name: squadName });
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                const tableEl = document.querySelector('.fb-squad-list');
+                tableEl.style.display = 'block';
+                tableEl.innerHTML = html;
+            })
+    });
+}
+
+function handleShowSquad() {
+    const tableEl = document.querySelector('.fb-squad-list');
+    tableEl.addEventListener('click', function (e) {
+        if (!e.target.classList.contains('js-show-squad-btn')) {
+            return;
+        }
+        e.preventDefault();
+        const formEl = e.target.closest('form');
+        formData = new FormData(formEl);
+        const url = formEl.getAttribute('action') + "?" + new URLSearchParams(formData);
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                const tableEl = document.querySelector('#alineation');
+                tableEl.style.display = 'block';
+                tableEl.innerHTML = html;
+                btnGroupEl = document.querySelectorAll('.fb-js-player-btn-group');
+                btnGroupEl.forEach(btn => {
+                    btn.style.display = 'block';
+                });
+            })
+    });
+}

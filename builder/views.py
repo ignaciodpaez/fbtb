@@ -108,3 +108,31 @@ def save_squad_ajax(request):
             return HttpResponseBadRequest("Invalid JSON")
     
     return HttpResponseBadRequest("Only POST allowed")
+
+
+def find_squad_ajax(request):
+    template = loader.get_template('builder/squad_list.html')
+    context = {}
+    
+    name = request.GET.get('squad_name')
+    timestamp = request.GET.get('timestamp')
+
+    squad = select_user_squad(name, timestamp) #.drop_duplicates(subset=['squad_name', 'timestamp'], keep='first')
+    grouped_df = squad.groupby(['timestamp', 'squad_name']).size().reset_index(name='size')
+
+    context['squad_list'] = grouped_df
+
+    return HttpResponse(template.render(context, request))
+
+def show_squad_ajax(request):
+    template = loader.get_template('builder/players.html')
+    context = {}
+    
+    name = request.GET.get('squad_name')
+    timestamp = request.GET.get('timestamp')
+
+    squad = select_user_squad(name, int(timestamp))
+
+    context['players'] = squad
+
+    return HttpResponse(template.render(context, request))

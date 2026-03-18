@@ -282,6 +282,22 @@ def select_competition_players(competition_id, season_start=None, season_end=Non
     return df_player[mask].drop_duplicates(subset=['id']).reset_index(drop=True)
 
 
+def select_user_squad(name, timestamp=None):
+    # type: (str, int) -> pd.DataFrame
+    
+    file_name = 'data/fb_user_squad.csv'
+    
+    if os.path.exists(file_name) is False:
+        raise RuntimeError(f"{file_name} not exists")
+
+    df_squad = pd.read_csv(file_name)
+
+    if timestamp is not None:
+        df_squad = df_squad[df_squad['timestamp'] == timestamp]
+
+    return df_squad[df_squad['squad_name'] == name]
+
+
 def read_sql_query(df, table=None, stmt=None):
     # type: (pd.DataFrame, str, str) -> pd.DataFrame
 

@@ -74,6 +74,14 @@
                 </form>
             </div>
         </div>
+        <hr>
+        <form class="fb-js-find-squad" action="{% url 'ajax_find_squad' %}" method="get">
+            <label for="squadSearch">Find Squad:</label>
+            <input type="text" name="squad_name" id="squadSearch" placeholder="Squad Name">
+            <button type="submit">Search</button>
+        </form>
+        <table class="fb-squad-list"> 
+        </table>
     </main>
     {% load static %}
     <script src="{% static 'builder/script.js' %}"></script>
@@ -87,6 +95,8 @@
         handlePlayerBtn();
         handleSwapPlayers();
         handleSaveSquad();
+        handleFindSquad();
+        handleShowSquad();
     </script>
 </body>
 </html>
