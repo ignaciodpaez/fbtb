@@ -1,6 +1,5 @@
 import ast
 import concurrent.futures as cf
-import json
 import os
 import sqlite3
 import time
@@ -295,7 +294,7 @@ def select_user_squad(name, timestamp=None):
     if timestamp is not None:
         df_squad = df_squad[df_squad['timestamp'] == timestamp]
 
-    return df_squad[df_squad['squad_name'] == name]
+    return df_squad[df_squad['squad_name'].str.contains(name)]
 
 
 def read_sql_query(df, table=None, stmt=None):
@@ -305,8 +304,7 @@ def read_sql_query(df, table=None, stmt=None):
 
     try:
         df.to_sql(table, conn, index=False, if_exists='replace')
-        query = stmt
-        df_query = pd.read_sql_query(query, conn)
+        df_query = pd.read_sql_query(stmt, conn)
     
         return df_query
     finally:

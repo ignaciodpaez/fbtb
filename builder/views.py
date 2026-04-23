@@ -34,7 +34,7 @@ def get_clubs_ajax(request):
     tm = TransfermarktGateway()
     clubs = tm.get_competition_clubs(competition, get_int_param(season, 2000))
 
-    context['clubs'] = clubs
+    context['clubs'] = clubs.sort_values(by='club_name')
 
     return HttpResponse(template.render(context, request))
 
@@ -80,19 +80,19 @@ def get_players_ajax(request):
         players = read_sql_query(pd.read_csv('data/tm_players.csv'), 'tm_players', sql)
     elif club is None:
         league = request.GET.get('competition')
-        players = select_competition_players(league, nation=nations)
+        players = select_competition_players(league, nation=nations).sort_values(by='position')
     else:
         players = select_players(
             int(club), 
             int(season_start) if season_start else None, 
             int(season_end)if season_end else None, 
             nation=nations
-        )
+        ).sort_values(by='position')
 
     players['age'] = pd.to_numeric(players['age'], downcast='integer')
     players['height'] = pd.to_numeric(players['height'], downcast='integer')
 
-    context['players'] = players.sort_values(by='position')
+    context['players'] = players
 
     return HttpResponse(template.render(context, request))
 
@@ -123,6 +123,7 @@ def find_squad_ajax(request):
     context['squad_list'] = grouped_df
 
     return HttpResponse(template.render(context, request))
+
 
 def show_squad_ajax(request):
     template = loader.get_template('builder/players.html')
